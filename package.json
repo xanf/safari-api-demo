@@ -5,17 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "db:init": "node -r @std/esm scripts/initDb.mjs",
+    "db:seed": "node -r @std/esm scripts/seedDb.mjs"
   },
   "prettier": {
     "singleQuote": true,
     "trailingComma": true
   },
   "eslintConfig": {
-    "extends": [
-      "airbnb-base",
-      "prettier"
-    ],
+    "extends": ["airbnb-base", "prettier"],
     "rules": {
       "import/extensions": [
         "error",
@@ -30,10 +29,7 @@
     "settings": {
       "import/resolver": {
         "node": {
-          "extensions": [
-            ".js",
-            ".mjs"
-          ]
+          "extensions": [".js", ".mjs"]
         }
       }
     },

@@ -10,6 +10,8 @@ export default rc(APP_NAME, {
   },
   db: {
     client: 'sqlite3',
-    connection: 'sqlite3:///test.sqlite',
+    connection: {
+      filename: './test.sqlite',
+    },
   },
 });
