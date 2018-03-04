@@ -1,53 +1,26 @@
 import Router from 'koa-router';
-import template from 'lodash/template';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import jwtMiddleware from 'koa-jwt';
-import { getCustomer, setSmsPin } from '../db/repositories/customer';
 import { getUser } from '../db/repositories/user';
 import {
   createSession,
   destroySessionsBySessionId,
 } from '../db/repositories/session';
-import sendSms from '../services/sms';
+import { initPinAuth, performPinAuth } from '../services/pinAuth';
 import { NotFoundError } from '../helpers/error';
 import config from '../config';
-
-const pinTemplate = template(config.messages.smsPin);
 
 const router = new Router();
 router.post('/customer', async ctx => {
   const { phoneNumber } = ctx.request.body;
-  const customer = await getCustomer({ phoneNumber });
-  if (!customer) {
-    throw new NotFoundError();
-  }
-  const pin = 1000 + Math.floor(Math.random() * 8999);
-
-  await setSmsPin({
-    phoneNumber,
-    smsPin: pin.toString(),
-  });
-
-  await sendSms({
-    phoneNumber,
-    message: pinTemplate({ pin }),
-  });
+  await initPinAuth(phoneNumber);
   ctx.body = { success: true };
 });
 
-router.post('/customer/sms', async ctx => {
+router.post('/customer/verify', async ctx => {
   const { phoneNumber, pin } = ctx.request.body;
-  const customer = await getCustomer({ phoneNumber });
-  if (!customer || customer.smsPin !== pin) {
-    throw new NotFoundError();
-  }
-
-  await setSmsPin({
-    phoneNumber,
-    smsPin: '',
-  });
-
+  await performPinAuth({ phoneNumber, pin });
   ctx.body = {
     token: jwt.sign(
       {
