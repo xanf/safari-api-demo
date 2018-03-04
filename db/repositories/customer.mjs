@@ -15,21 +15,24 @@ export function getCustomer(criteria) {
 export async function getCustomerFullInfo(criteria) {
   const customer = await getCustomer(criteria);
   const { cardId } = customer;
-  const card = await getCard({ id: cardId });
+  const card = cardId ? await getCard({ id: cardId }) : null;
   return {
     ...customer,
     card,
   };
 }
 
-export function setSmsPin({ phoneNumber, smsPin }) {
+function update({ criteria, data }) {
   return table()
-    .where({ phoneNumber })
-    .update({ smsPin });
+    .where(criteria)
+    .update(data);
 }
 
-export function setNotes({ customerId, notes }) {
-  return table()
-    .update({ notes })
-    .where({ id: customerId });
-}
+export const setSmsPin = ({ phoneNumber, smsPin }) =>
+  update({ criteria: { phoneNumber }, data: { smsPin } });
+
+export const setNotes = ({ customerId, notes }) =>
+  update({ criteria: { id: customerId }, data: { notes } });
+
+export const setCardId = ({ customerId, cardId }) =>
+  update({ criteria: { id: customerId }, data: { cardId } });

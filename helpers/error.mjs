@@ -14,4 +14,10 @@ export class NotAuthorizedError extends Error {
   }
 }
 
-export class ValidationError extends Error {}
+export class LogicError extends Error {
+  constructor(message) {
+    super(message);
+    this.status = 400;
+    this.expose = true;
+  }
+}

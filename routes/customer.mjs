@@ -10,6 +10,7 @@ import requireRole from '../helpers/acl';
 import { NotAuthorizedError } from '../helpers/error';
 import config from '../config';
 import { initPinAuth, performPinAuth } from '../services/pinAuth';
+import { attachCard, detachCard } from '../services/cards';
 
 const router = new Router();
 router.use(requireRole('operator'));
@@ -46,7 +47,6 @@ function verifyGrantToken(token) {
     if (Date.now() / 1000 - iat > config.customerTimeout) {
       throw new Error();
     }
-
     return customerId;
   } catch (e) {
     throw new NotAuthorizedError();
@@ -62,6 +62,19 @@ router.post('/grantToken/:token/notes', async ctx => {
   const customerId = verifyGrantToken(ctx.params.token);
   const { notes } = ctx.request.body;
   await setNotes({ customerId, notes });
+  ctx.body = { success: true };
+});
+
+router.post('/grantToken/:token/attachCard/:code', async ctx => {
+  const customerId = verifyGrantToken(ctx.params.token);
+  const { code } = ctx.params;
+  await attachCard({ customerId, code });
+  ctx.body = { success: true };
+});
+
+router.post('/grantToken/:token/detachCard', async ctx => {
+  const customerId = verifyGrantToken(ctx.params.token);
+  await detachCard({ customerId });
   ctx.body = { success: true };
 });
 
