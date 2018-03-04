@@ -14,11 +14,9 @@
     "trailingComma": true
   },
   "eslintConfig": {
-    "extends": [
-      "airbnb-base",
-      "prettier"
-    ],
+    "extends": ["airbnb-base", "prettier"],
     "rules": {
+      "import/prefer-default-export": 0,
       "import/extensions": [
         "error",
         "always",
@@ -32,10 +30,7 @@
     "settings": {
       "import/resolver": {
         "node": {
-          "extensions": [
-            ".js",
-            ".mjs"
-          ]
+          "extensions": [".js", ".mjs"]
         }
       }
     },
