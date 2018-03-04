@@ -1,17 +1,20 @@
 import Koa from 'koa';
 import cors from '@koa/cors';
 import Router from 'koa-router';
+import bodyParser from 'koa-bodyparser';
 import config from './config';
 
+import authRouter from './routes/auth';
+
 const app = new Koa();
-const demoRouter = new Router();
+const mainRouter = new Router();
 
-demoRouter.get('/', ctx => {
-  ctx.body = 'Hello world';
-});
+mainRouter.use('/auth', authRouter.routes(), authRouter.allowedMethods());
 
+// app.use(errorHandler);
 app.use(cors());
-app.use(demoRouter.allowedMethods());
-app.use(demoRouter.routes());
+app.use(bodyParser());
+app.use(mainRouter.allowedMethods());
+app.use(mainRouter.routes());
 
 app.listen(config.port);

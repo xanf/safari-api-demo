@@ -63,6 +63,13 @@ async function initDb() {
     t.foreign('userId').references('users.id');
   });
 
+  await db.schema.createTable('sessions', t => {
+    t.increments().primary();
+
+    t.integer('userId');
+    t.foreign('userId').references('users.id');
+  });
+
   await db.destroy();
 }
 
