@@ -5,6 +5,7 @@ const APP_NAME = 'SAFARI';
 export default rc(APP_NAME, {
   port: 3000,
   secret: 'supersecret',
+  customerTimeout: 3000000,
   twilio: {
     accountSid: 'AC5eb47ab59b156d2a529812b8b2cd35e2',
     authToken: '',

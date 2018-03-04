@@ -27,3 +27,9 @@ export function setSmsPin({ phoneNumber, smsPin }) {
     .where({ phoneNumber })
     .update({ smsPin });
 }
+
+export function setNotes({ customerId, notes }) {
+  return table()
+    .update({ notes })
+    .where({ id: customerId });
+}
