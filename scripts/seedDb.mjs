@@ -1,59 +1,76 @@
+import bcrypt from 'bcrypt';
 import db from '../db';
 
 async function seed() {
-  await db.schema.createTable('cardLevels', t => {
-    t.increments().primary();
-    t.string('name').unique();
-    t.text('description');
-    t.integer('minPoints');
-  });
+  await db('cardLevels').insert([
+    {
+      id: 1,
+      name: 'Silver',
+      description: 'Silver card description',
+      minPoints: 1,
+    },
+    {
+      id: 2,
+      name: 'Gold',
+      description: 'Gold card description',
+      minPoints: 100,
+    },
+    {
+      id: 3,
+      name: 'VIP',
+      description: 'VIP card',
+      minPoints: null,
+    },
+  ]);
 
-  await db.schema.createTable('cards', t => {
-    t.increments().primary();
-    t.string('code').unique();
-    t.integer('cardLevelId').notNullable();
-    t.foreign('cardLevelId').references('cardLevels.id');
-  });
+  await db('cards').insert([
+    { id: 1, code: 'foo', cardLevelId: 1 },
+    { id: 2, code: 'bar', cardLevelId: 1 },
+    { id: 3, code: 'baz', cardLevelId: 2 },
+  ]);
 
-  await db.schema.createTable('customers', t => {
-    t.increments().primary();
-    t
-      .string('phoneNumber')
-      .notNullable()
-      .unique();
-    t.string('firstName').notNullable();
-    t.string('lastName').notNullable();
-    t.string('patronimic');
-    t.date('birthDate');
-    t.integer('points');
-    t.text('notes');
-    t.string('fitnessCardNumber');
-    t.string('smsPin');
-  });
+  await db('customers').insert([
+    {
+      id: 1,
+      phoneNumber: '+380504020799',
+      firstName: 'Illya',
+      lastName: 'Klymov',
+      points: 1000,
+      notes: 'Very awesome client',
+      fitnessCardNumber: '10465321',
+      cardId: 3,
+    },
+  ]);
 
-  await db.schema.createTable('users', t => {
-    t.increments().primary();
-    t.string('recoveryToken');
-    t.string('firstName').notNullable();
-    t.string('lastName').notNullable();
-    t.string('patronimic');
-    t.string('phoneNumber').notNullable();
-    t.string('password');
-    t.string('role');
-  });
-
-  await db.schema.createTable('transactions', t => {
-    t.increments().primary();
-
-    t.integer('customerId');
-    t.foreign('customerId').references('customers.id');
-
-    t.date('created_at').notNullable();
-    t.string('comment').notNullable();
-
-    t.integer('userId').notNullable();
-    t.foreign('userId').references('users.id');
-  });
+  await db('users').insert([
+    {
+      id: 1,
+      email: 'admin@demo.me',
+      firstName: 'Admin',
+      lastName: 'admin',
+      phoneNumber: '1',
+      password: bcrypt.hashSync('test', 10),
+      role: 'admin',
+    },
+    {
+      id: 2,
+      email: 'operator@demo.me',
+      firstName: 'Operator',
+      lastName: 'Operator',
+      phoneNumber: '2',
+      password: bcrypt.hashSync('test', 10),
+      role: 'operator',
+    },
+    {
+      id: 3,
+      email: 'manager@demo.me',
+      firstName: 'Manager',
+      lastName: 'Manager',
+      phoneNumber: '3',
+      password: bcrypt.hashSync('test', 10),
+      role: 'manager',
+    },
+  ]);
 
   await db.destroy();
 }

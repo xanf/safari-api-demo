@@ -1,10 +1,9 @@
 import db from '../db';
 
-async function seed() {
+async function initDb() {
   await db.schema.createTable('cardLevels', t => {
     t.increments().primary();
     t.string('name').unique();
-    t.boolean('disabled');
     t.text('description');
     t.integer('minPoints');
   });
@@ -25,6 +24,10 @@ async function seed() {
     t.string('firstName').notNullable();
     t.string('lastName').notNullable();
     t.string('patronimic');
+
+    t.integer('cardId');
+    t.foreign('cardId').references('cards.id');
+
     t.date('birthDate');
     t.integer('points');
     t.text('notes');
@@ -34,6 +37,10 @@ async function seed() {
 
   await db.schema.createTable('users', t => {
     t.increments().primary();
+    t
+      .string('email')
+      .notNullable()
+      .unique();
     t.string('recoveryToken');
     t.string('firstName').notNullable();
     t.string('lastName').notNullable();
@@ -41,7 +48,6 @@ async function seed() {
     t.string('phoneNumber').notNullable();
     t.string('password');
     t.string('role');
-    t.boolean('disabled');
   });
 
   await db.schema.createTable('transactions', t => {
@@ -57,33 +63,7 @@ async function seed() {
     t.foreign('userId').references('users.id');
   });
 
-  await db.schema.createTable('logs', t => {
-    t.increments().primary();
-    t.string('entityType').notNullable();
-    t.integer('entityId').notNullable();
-    t.string('operation').notNullable();
-    t.text('data');
-    t.integer('userId').notNullable();
-    t.foreign('userId').references('users.id');
-  });
-
-  await db.schema.createTable('sessions', t => {
-    t.increments().primary();
-    t.integer('userId').notNullable();
-    t.foreign('userId').references('users.id');
-  });
-
-  await db.schema.createTable('pushTokens', t => {
-    t.increments().primary();
-
-    t.integer('userId').notNullable();
-    t.foreign('userId').references('users.id');
-
-    t.string('platform').notNullable();
-    t.string('token').notNullable();
-  });
-
   await db.destroy();
 }
 
-seed();
+initDb();
