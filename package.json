@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
   },
   "prettier": {
     "singleQuote": true,
@@ -15,7 +16,7 @@
       "airbnb-base",
       "prettier"
     ],
-    "settings": {
+    "rules": {
       "import/extensions": [
         "error",
         "always",
@@ -24,9 +25,16 @@
           "jsx": "never",
           "mjs": "never"
         }
-      ],
+      ]
+    },
+    "settings": {
       "import/resolver": {
-        "node": { "extensions": [ ".js", ".mjs" ] }
+        "node": {
+          "extensions": [
+            ".js",
+            ".mjs"
+          ]
+        }
       }
     },
     "env": {
@@ -40,9 +48,17 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-import": "^2.9.0",
+    "nodemon": "^1.17.1",
     "prettier": "^1.11.1"
   },
   "dependencies": {
-    "@std/esm": "^0.24.0"
+    "@koa/cors": "^2.2.1",
+    "@std/esm": "^0.24.0",
+    "knex": "^0.14.4",
+    "koa": "^2.5.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-router": "^7.4.0",
+    "rc": "^1.2.5",
+    "sqlite3": "^3.1.13"
   }
 }
