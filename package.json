@@ -1,0 +1,48 @@
+{
+  "name": "safari-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": true
+  },
+  "eslintConfig": {
+    "extends": [
+      "airbnb-base",
+      "prettier"
+    ],
+    "settings": {
+      "import/extensions": [
+        "error",
+        "always",
+        {
+          "js": "never",
+          "jsx": "never",
+          "mjs": "never"
+        }
+      ],
+      "import/resolver": {
+        "node": { "extensions": [ ".js", ".mjs" ] }
+      }
+    },
+    "env": {
+      "node": true
+    }
+  },
+  "author": "Illya Klymov <illya@javascript.ninja>",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^4.18.2",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.9.0",
+    "prettier": "^1.11.1"
+  },
+  "dependencies": {
+    "@std/esm": "^0.24.0"
+  }
+}
