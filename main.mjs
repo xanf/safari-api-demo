@@ -6,11 +6,16 @@ import config from './config';
 
 import authRouter from './routes/auth';
 import meRouter from './routes/me';
+import customerRouter from './routes/customer';
 
 const app = new Koa();
 const mainRouter = new Router();
 
-const routers = { '/auth': authRouter, '/me': meRouter };
+const routers = {
+  '/auth': authRouter,
+  '/me': meRouter,
+  '/customer': customerRouter,
+};
 Object.entries(routers).forEach(([path, r]) => {
   mainRouter.use(path, r.routes(), r.allowedMethods());
 });

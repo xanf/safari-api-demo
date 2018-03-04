@@ -1,21 +1,21 @@
 import db from '..';
 import checkExistence from '../../helpers/checkExistence';
-import { getCardById } from './card';
+import { getCard } from './card';
 
 const table = () => db('customers');
 
-export function getCustomerByPhoneNumber(phoneNumber) {
+export function getCustomer(criteria) {
   return table()
     .select()
-    .where({ phoneNumber })
+    .where(criteria)
     .first()
     .then(checkExistence);
 }
 
-export async function getCustomerFullInfoByPhoneNumber(phoneNumber) {
-  const customer = await getCustomerByPhoneNumber(phoneNumber);
+export async function getCustomerFullInfo(criteria) {
+  const customer = await getCustomer(criteria);
   const { cardId } = customer;
-  const card = await getCardById(cardId);
+  const card = await getCard({ id: cardId });
   return {
     ...customer,
     card,

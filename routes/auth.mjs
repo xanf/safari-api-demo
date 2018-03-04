@@ -3,11 +3,8 @@ import template from 'lodash/template';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import jwtMiddleware from 'koa-jwt';
-import {
-  getCustomerByPhoneNumber,
-  setSmsPin,
-} from '../db/repositories/customer';
-import { getUserByEmail } from '../db/repositories/user';
+import { getCustomer, setSmsPin } from '../db/repositories/customer';
+import { getUser } from '../db/repositories/user';
 import {
   createSession,
   destroySessionsBySessionId,
@@ -21,7 +18,7 @@ const pinTemplate = template(config.messages.smsPin);
 const router = new Router();
 router.post('/customer', async ctx => {
   const { phoneNumber } = ctx.request.body;
-  const customer = await getCustomerByPhoneNumber(phoneNumber);
+  const customer = await getCustomer({ phoneNumber });
   if (!customer) {
     throw new NotFoundError();
   }
@@ -41,7 +38,7 @@ router.post('/customer', async ctx => {
 
 router.post('/customer/sms', async ctx => {
   const { phoneNumber, pin } = ctx.request.body;
-  const customer = await getCustomerByPhoneNumber(phoneNumber);
+  const customer = await getCustomer({ phoneNumber });
   if (!customer || customer.smsPin !== pin) {
     throw new NotFoundError();
   }
@@ -64,7 +61,8 @@ router.post('/customer/sms', async ctx => {
 
 router.post('/user', async ctx => {
   const { email, password } = ctx.request.body;
-  const user = await getUserByEmail(email);
+  const user = await getUser({ email });
+
   if (!user || !bcrypt.compareSync(password, user.password)) {
     throw new NotFoundError();
   }

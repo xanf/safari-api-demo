@@ -2,7 +2,7 @@ import Router from 'koa-router';
 import jwtMiddleware from 'koa-jwt';
 
 import { NotAuthorizedError } from '../helpers/error';
-import { getCustomerFullInfoByPhoneNumber } from '../db/repositories/customer';
+import { getCustomerFullInfo } from '../db/repositories/customer';
 import config from '../config';
 
 const router = new Router();
@@ -16,7 +16,9 @@ router.use((ctx, next) => {
 });
 
 router.get('/', async ctx => {
-  ctx.body = await getCustomerFullInfoByPhoneNumber(ctx.state.user.phoneNumber);
+  ctx.body = await getCustomerFullInfo({
+    phoneNumber: ctx.state.user.phoneNumber,
+  });
 });
 
 export default router;
